@@ -479,6 +479,23 @@
                 showTab('day1', firstTab);
             }
         }
+        // ** TAB 頁籤切換邏輯 **
+function showTab(tabId, element) {
+    // 1. 隱藏所有內容區塊
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    
+    // 2. 移除所有導航列項目的 active 樣式
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    // 3. 顯示目標內容區塊
+    document.getElementById(tabId).classList.remove('hidden');
+    
+    // 4. 為點擊的導航項目新增 active 樣式
+    element.classList.add('active');
+    
+    // 5. 滾動到頁面頂部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
     </script>
 </body>
 </html>
