@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#374151"> <title>4天3夜 京都親子春節行 - 極致細節版</title>
+    <meta name="theme-color" content="#6ee7b7"> <title>4天3夜 親子手帳風行程</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -11,26 +11,33 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f7f7f5; padding-bottom: 30px; }
-        .header-bg { background: #4b5563; color: white; }
-        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 18px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); transition: transform 0.2s; }
-        .tag { background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-right: 5px; }
-        .sub-heading { color: #374151; font-weight: 700; border-left: 4px solid #10b981; padding-left: 10px; margin-bottom: 12px; font-size: 1.1rem; }
+        /* 手帳風：紙張底色、手寫感邊框 */
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #fcfcf9; padding-bottom: 30px; }
+        .header-bg { background: #6ee7b7; color: #1f2937; } /* 薄荷綠 */
+        .card { background: white; border-radius: 2rem; padding: 20px; margin-bottom: 25px; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05); }
+        .sub-heading { color: #34d399; font-weight: 800; border-left: 6px solid #34d399; padding-left: 12px; margin-bottom: 12px; font-size: 1.2rem; }
         .nav-item { flex: 1; text-align: center; padding: 12px 5px; color: #9ca3af; font-size: 0.9rem; white-space: nowrap; }
-        .nav-item.active { color: #10b981; font-weight: bold; border-bottom: 3px solid #10b981; }
-        .detail-item { font-size: 0.9rem; color: #4b5563; line-height: 1.6; }
-        .duration { font-weight: bold; color: #f97316; }
+        .nav-item.active { color: #34d399; font-weight: bold; border-bottom: 3px dashed #34d399; } /* 手帳虛線 */
+        .detail-item { font-size: 0.95rem; color: #4b5563; line-height: 1.6; }
+        .duration { font-weight: bold; color: #ef4444; } /* 醒目紅色標註時間 */
+        
+        /* 圖片容器：圓角貼圖風格 */
+        .image-container { overflow: hidden; border-radius: 1.5rem; margin-top: 15px; margin-bottom: 15px; border: 3px solid #f3f4f6; }
+        .image-container img { width: 100%; height: auto; display: block; }
+
+        /* 新增：地圖/聯絡資訊卡 */
+        .contact-info-card { background: #fffbeb; border: 1px solid #fde68a; border-radius: 1rem; padding: 15px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="header-bg pt-10 pb-4 px-6 sticky top-0 z-50 shadow-lg rounded-b-lg">
-        <h1 class="text-3xl font-extrabold">🇯🇵 京都 4D3N 完美計畫</h1>
-        <p class="text-sm opacity-80 mt-1">2大2小 • 家庭公寓 • 極致細節版</p>
+    <div class="header-bg pt-10 pb-4 px-6 sticky top-0 z-50 shadow-md rounded-b-3xl">
+        <h1 class="text-3xl font-extrabold">🌸 京都 4D3N 家庭手帳</h1>
+        <p class="text-sm opacity-90 mt-1">2大2小 • 清新自然 • ChicTrip 風格計畫</p>
     </div>
 
-    <div class="sticky top-[80px] z-40 bg-[#f7f7f5] pt-2">
-        <div class="flex bg-white mx-4 rounded-xl shadow-md px-2 overflow-x-auto">
+    <div class="sticky top-[80px] z-40 bg-[#fcfcf9] pt-2">
+        <div class="flex bg-white mx-4 rounded-3xl shadow-lg px-2 overflow-x-auto">
             <div class="nav-item active" onclick="showTab('info', this)">總覽/行前</div>
             <div class="nav-item" onclick="showTab('day1', this)">Day 1</div>
             <div class="nav-item" onclick="showTab('day2', this)">Day 2</div>
@@ -40,119 +47,138 @@
         </div>
     </div>
 
-    <div class="p-4 pb-24 max-w-md mx-auto mt-2">
+    <div class="p-4 pb-24 max-w-md mx-auto mt-4">
         
         <div id="info" class="tab-content">
-            <div class="card border-t-4 border-gray-600 bg-gray-50">
-                <h3 class="sub-heading text-gray-700">✈️ 班機與預留時間</h3>
+            <div class="card border-t-4 border-gray-400 bg-gray-50">
+                <h3 class="sub-heading text-gray-700">✈️ 班機與住宿資訊</h3>
                 <ul class="space-y-3 mt-3">
-                    <li class="detail-item"><i class="fas fa-calendar-alt text-gray-500 mr-2"></i> **建議日期：** 4天3夜（週五至週一，避開週末通勤潮）。</li>
+                    <li class="detail-item"><i class="fas fa-calendar-alt text-gray-500 mr-2"></i> **建議日期：** 4天3夜（週五到週一）。</li>
                     <li class="detail-item"><i class="fas fa-arrow-up text-green-500 mr-2"></i> **去程 (TPE->KIX)：** 08:00 (TPE) -> 11:30 (KIX)。</li>
-                    <li class="detail-item"><i class="fas fa-arrow-down text-red-500 mr-2"></i> **回程 (KIX->TPE)：** 18:30 (KIX) -> 20:30 (TPE)。</li>
-                    <li class="detail-item text-red-600 font-bold"><i class="fas fa-clock text-red-500 mr-2"></i> **機場預留時間：** 建議預留 **4 小時** (3hr check-in/通關 + 1hr 交通彈性)。</li>
+                    <li class="detail-item"><i class="fas fa-hotel text-green-500 mr-2"></i> **飯店推薦：** **MIMARU 京都站** (有廚房/四人房)。交通便利，旁邊有大型超市。</li>
+                    <li class="detail-item text-red-600 font-bold"><i class="fas fa-clock text-red-500 mr-2"></i> **機場預留時間：** 建議預留 **4 小時**。</li>
                 </ul>
-                [attachment_0](attachment)
             </div>
-
-            <div class="card border-t-4 border-green-500">
-                <h3 class="sub-heading">🏠 住宿與生活核心</h3>
-                <ul class="space-y-3 mt-3">
-                    <li class="detail-item"><i class="fas fa-hotel text-green-500 mr-2"></i> **飯店推薦：** **MIMARU 京都站/四條烏丸**。家庭房型、含簡易廚房，走路可達超市，交通樞紐。</li>
-                    <li class="detail-item"><i class="fas fa-utensils text-green-500 mr-2"></i> **採買/烹飪：** 飯店旁 **Life 超市 (較大)** 或 **Fresco**。適合晚餐/早餐自理，省時且符合小孩胃口。</li>
-                    <li class="detail-item"><i class="fas fa-train text-green-500 mr-2"></i> **交通卡：** **ICOCA 卡** (等同悠遊卡)，可綁定手機，全程搭乘地鐵/公車。</li>
-                </ul>
-                
+            <div class="card border-t-4 border-yellow-500">
+                <h3 class="sub-heading">🌡️ 當地氣候與穿搭建議</h3>
+                <p class="detail-item">**⚠️ 氣候限制：** 目前 App 無法提供「即時天氣」，此處為平均氣候參考。</p>
+                <p class="detail-item mt-2"><i class="fas fa-snowflake text-blue-500 mr-2"></i> **2月氣候：** 平均 2°C ~ 10°C。乾燥且冷，需洋蔥式穿法。</p>
+                <p class="detail-item"><i class="fas fa-tshirt text-blue-500 mr-2"></i> **穿搭建議：** 發熱衣/毛衣 + 羽絨外套/防風外套。兒童需戴帽子、手套、圍巾。</p>
             </div>
         </div>
 
         <div id="day1" class="tab-content hidden">
-            <div class="text-center text-gray-500 text-sm mb-4">週五 - 抵達與在地市場體驗</div>
+            <div class="text-center text-gray-500 text-sm mb-4">Day 1 (週五) - 抵達與溫馨公寓晚餐</div>
             
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🚇 上午：機場與安頓</h3>
-                <p class="detail-item">**[11:30-12:30]** KIX 關西機場通關。購買或儲值 ICOCA 卡。</p>
-                <p class="detail-item">**[13:00-14:30]** 搭乘 **HARUKA 特急** 直達京都站 (約 75 分鐘)。</p>
-                <p class="detail-item">**[15:00]** 飯店 Check-in & 行李安頓。</p>
-                <p class="detail-item duration">建議停留：2.5hr (交通/入住)</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">📍 行程：KIX 機場 > 京都站 > Check-in MIMARU</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[11:30-15:00]** 機場通關，搭乘 **HARUKA** 特急至京都站。</p>
+                <p class="detail-item">**[15:30-17:00]** 飯店 Check-in 安頓。**任務：** 熟悉公寓廚房設備。</p>
+                <p class="detail-item duration">建議停留：3.5hr (交通/入住)</p>
+                <p class="detail-item"><i class="fas fa-bus text-gray-500 mr-2"></i> 交通：HARUKA 特急 (約 75min)。</p>
             </div>
 
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🍤 下午/晚餐：錦市場體驗</h3>
-                <p class="detail-item">**[16:00-18:00]** **錦市場**。體驗京都的廚房，試吃各種日式小點 (章魚蛋、豆乳甜甜圈)。</p>
-                <p class="detail-item">**[18:30]** 在四條/烏丸周邊找一間**迴轉壽司 (壽司郎/藏壽司)**，或回到飯店旁的 **Life 超市** 採買，準備晚餐。</p>
-                <p class="detail-item duration">建議停留：2-3hr (包含移動)</p>
-                <p class="detail-item text-red-600 font-bold">💡 交通：地鐵烏丸線到四條站，步行 5 分鐘。市場內人多請牽好小孩。</p>
-                [attachment_1](attachment)
+            <div class="card bg-white">
+                <h3 class="sub-heading">🍲 晚餐：在地超市採買與自煮體驗</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[17:30-19:00]** 前往飯店附近的 **Life 超市 (ライフ)** 採買。購買當季草莓、牛排或新鮮食材。</p>
+                <p class="detail-item">**[19:00~]** 在 MIMARU 公寓內**自煮** (例如：簡單的日式鍋物或壽喜燒)。</p>
+                <p class="detail-item duration">建議停留：2hr (採買/烹飪)</p>
+                
+                <div class="contact-info-card">
+                    <p class="text-sm font-bold text-gray-700">🛒 **Life 超市 (七條店)**</p>
+                    <p class="text-xs">📞 聯絡：075-351-1251 (代表號)</p>
+                    <a href="https://maps.app.goo.gl/P3sX3YmB72yN4fTf8" target="_blank" class="text-xs text-blue-500 font-bold flex items-center mt-1"><i class="fas fa-map-marker-alt mr-1"></i> 導航地圖連結</a>
+                </div>
             </div>
         </div>
 
         <div id="day2" class="tab-content hidden">
-            <div class="text-center text-gray-500 text-sm mb-4">週六 - 鐵道博物館與水族館 (一站式放電)</div>
+            <div class="text-center text-gray-500 text-sm mb-4">Day 2 (週六) - 鐵道、海洋與親子放電</div>
             
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🚂 全天：梅小路公園周邊</h3>
-                <p class="detail-item">**[09:30-13:00]** **京都鐵道博物館**。館內設施豐富，戶外扇形車庫是亮點。可搭乘 **SL 蒸汽火車** (約 10 分鐘，需另購票)。</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">🚂 上午：京都鐵道博物館</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[09:30-13:00]** 國小生最愛！可看到各年代火車，還有**戶外 SL 蒸汽火車**可搭乘。</p>
                 <p class="detail-item duration">建議停留：3.5hr</p>
-                <p class="detail-item text-red-600 font-bold">💡 午餐：建議在博物館內的餐廳解決，節省往返時間。交通：JR 山陰本線到梅小路京都西站。</p>
-                [attachment_2](attachment)
+                <p class="detail-item"><i class="fas fa-bus text-gray-500 mr-2"></i> 交通：JR 山陰本線到**梅小路京都西站** (出站即達)。</p>
+                <div class="contact-info-card">
+                    <p class="text-sm font-bold text-gray-700">📍 **京都鐵道博物館**</p>
+                    <p class="text-xs">📞 聯絡：0570-080-046</p>
+                    <a href="https://maps.app.goo.gl/9G12tLgP2y4p3M4E6" target="_blank" class="text-xs text-blue-500 font-bold flex items-center mt-1"><i class="fas fa-map-marker-alt mr-1"></i> 導航地圖連結</a>
+                </div>
             </div>
 
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🐬 下午：京都水族館</h3>
-                <p class="detail-item">**[14:00-17:00]** **京都水族館**。在鐵道館隔壁，步行即可。冬天室內避寒首選，有著名的**大山椒魚**展示區。</p>
-                <p class="detail-item">**[17:00-18:30]** 於**梅小路公園**讓小孩玩耍放電，公園設施很完善。</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">🐬 下午：京都水族館與梅小路公園</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[14:00-17:00]** 位於鐵道館隔壁。室內活動避寒，**海豚表演**及**大山椒魚**必看。</p>
                 <p class="detail-item duration">建議停留：3hr</p>
-                [attachment_3](attachment)
+                <p class="detail-item"><i class="fas fa-sun text-gray-500 mr-2"></i> **氣候建議：** 室內恆溫舒適。</p>
             </div>
-
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🍜 晚餐：京都站 Isetan 拉麵小路</h3>
-                <p class="detail-item">**[19:00]** 回到京都站，上 Isetan 百貨 10 樓的**拉麵小路**。多間名店可選，適合快速解決晚餐。</p>
+            
+            <div class="card bg-white">
+                <h3 class="sub-heading">🍣 晚餐：拉麵小路 - 德島東大拉麵</h3>
+                <p class="detail-item">**[19:00]** 回到京都站，上 **Isetan 百貨 10 樓「拉麵小路」**。</p>
+                <p class="detail-item text-red-600 font-bold">🍜 **點餐推薦：** 德島東大拉麵。湯頭濃郁，可免費加生雞蛋，適合親子共享。</p>
             </div>
         </div>
 
         <div id="day3" class="tab-content hidden">
-            <div class="text-center text-gray-500 text-sm mb-4">週日 - 經典文化與郊外竹林</div>
+            <div class="text-center text-gray-500 text-sm mb-4">Day 3 (週日) - 經典文化與郊外散步</div>
             
-            <div class="card bg-gray-50">
+            <div class="card bg-white">
                 <h3 class="sub-heading">⛩️ 上午：清水寺與二年坂 (早起避人潮)</h3>
-                <p class="detail-item">**[08:30-11:00]** **清水寺**。早晨人潮較少，拍照體驗最佳。重點參觀本堂的清水舞台。</p>
-                <p class="detail-item">**[11:00-12:30]** **二年坂/三年坂**。逛逛特色小店，帶小孩去**橡子共和國** (吉卜力專賣店)。</p>
-                <p class="detail-item duration">建議停留：4hr</p>
-                <p class="detail-item text-red-600 font-bold">💡 交通：建議搭乘計程車或巴士前往，較省力。午餐可在附近解決 (例如：湯豆腐料理)。</p>
-                [attachment_4](attachment)
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[08:30-12:00]** **清水寺**。早晨光線好，拍照避開旅行團。重點參觀本堂。</p>
+                <p class="detail-item">**[11:00]** **二年坂/三年坂**：在充滿日式風味的石板路尋找**橡子共和國** (宮崎駿專賣店)。</p>
+                <p class="detail-item duration">建議停留：3.5hr</p>
+                <p class="detail-item"><i class="fas fa-bus text-gray-500 mr-2"></i> 交通：建議搭乘計程車或公車 (清水道站) 前往。</p>
+                <div class="contact-info-card">
+                    <p class="text-sm font-bold text-gray-700">📍 **橡子共和國 (二年坂)**</p>
+                    <p class="text-xs">📞 聯絡：075-533-5180</p>
+                </div>
             </div>
 
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🎋 下午：嵐山竹林漫步</h3>
-                <p class="detail-item">**[14:00-16:00]** 交通：搭乘 JR 到嵯峨嵐山站。從車站步行前往**嵯峨野竹林之道**，約 15 分鐘。</p>
-                <p class="detail-item">**[16:00]** **渡月橋** 拍照留念。若時間充裕，可體驗 **嵐電足湯** (泡腳)。</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">🎋 下午：嵐山竹林之道與親子體驗</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[14:00-17:00]** 交通：搭乘 JR 到嵯峨嵐山站。從車站步行前往**竹林之道**，冬日景色靜謐。</p>
+                <p class="detail-item">**[16:00]** 推薦體驗：**嵐電足湯**，或在車站附近尋找**手作體驗課程**，讓小孩動手製作日式工藝品。</p>
                 <p class="detail-item duration">建議停留：3hr</p>
-                [attachment_5](attachment)
+                <p class="detail-item text-green-600 font-bold"><i class="fas fa-coffee mr-1"></i> **甜點推薦：** 嵐山大街上的 **ARINCO 蜂蜜蛋糕捲**。</p>
             </div>
-
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🥩 晚餐：公寓慢煮 (在地市集體驗)</h3>
-                <p class="detail-item">若遇到 **弘法市集 (21日)** 或 **天神市集 (25日)**，可採買在地特色熟食，回公寓享用。否則建議**找一家親子居酒屋**。 </p>
+            
+            <div class="card bg-white">
+                <h3 class="sub-heading">🥩 晚餐：燒肉弘 (預約制)</h3>
+                <p class="detail-item">**[19:30]** 必吃在地和牛。**務必提前一個月預約**，預約成功率較高。</p>
             </div>
         </div>
 
         <div id="day4" class="tab-content hidden">
-            <div class="text-center text-gray-500 text-sm mb-4">週一 - 採買與賦歸</div>
+            <div class="text-center text-gray-500 text-sm mb-4">Day 4 (週一) - 採買與賦歸</div>
             
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">🛍️ 上午/中午：京都站採買</h3>
-                <p class="detail-item">**[09:00]** Check-out 並將行李寄放在京都站置物櫃 (或飯店寄送至機場)。</p>
-                <p class="detail-item">**[10:00-13:00]** **AEON Mall KYOTO** (京都站八條口對面)。大型商場，方便集中採買藥妝、零食、衣服。設有大型遊樂場供兒童玩樂。</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">🛍️ 上午/中午：回國前大型採買</h3>
+                <div class="image-container">
+                                    </div>
+                <p class="detail-item">**[09:00]** Check-out 並將行李寄放/運送到機場。</p>
+                <p class="detail-item">**[10:00-13:00]** **AEON Mall KYOTO** (京都站八條口對面)。最後補貨點，大型玩具、零食、服飾一應俱全。</p>
                 <p class="detail-item duration">建議停留：3hr</p>
-                <p class="detail-item text-red-600 font-bold">💡 午餐：在 AEON Mall 內解決，多樣化且可快速用餐。</p>
-                
+                <p class="detail-item text-red-600 font-bold">💡 午餐：在 AEON Mall 內美食街解決，多樣化選擇可快速用餐。</p>
             </div>
 
-            <div class="card bg-gray-50">
-                <h3 class="sub-heading">✈️ 下午：搭機返回 (KIX)</h3>
-                <p class="detail-item">**[14:30]** 從京都站搭乘 **HARUKA 特急** 前往 KIX 機場 (約 75 分鐘)。</p>
-                <p class="detail-item">**[16:00]** 抵達 KIX，辦理登機手續。</p>
+            <div class="card bg-white">
+                <h3 class="sub-heading">✈️ 下午：前往機場與返航</h3>
+                <p class="detail-item">**[14:30]** 從京都站搭乘 **HARUKA 特急** 前往 KIX 機場。</p>
+                <p class="detail-item">**[16:00]** 抵達 KIX，預留 2.5 小時辦理登機手續。</p>
                 <p class="detail-item">**[18:30]** 班機起飛。</p>
                 <p class="detail-item duration">建議停留：4hr (含交通/登機)</p>
             </div>
@@ -204,7 +230,7 @@
                 const time = new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 
                 list.innerHTML += `
-                    <div class="card p-3 mb-2 flex justify-between items-center bg-white hover:shadow-lg">
+                    <div class="card p-3 mb-2 flex justify-between items-center bg-white hover:shadow-lg rounded-xl">
                         <div>
                             <div class="font-bold text-gray-800">${data.text}</div>
                             <div class="text-xs text-gray-400">${time}</div>
