@@ -4,199 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>2026 京都親子春節遊</title>
+    <title>2026 京都親子春節遊 (Live版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; padding-bottom: 20px; -webkit-tap-highlight-color: transparent; }
-        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); transition: transform 0.2s; }
-        .card:active { transform: scale(0.98); }
-        .tag { display: inline-block; background: #eff6ff; color: #2563eb; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 8px; }
-        .btn-map { background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; font-weight: bold; margin-top: 10px; }
-        .nav-item { flex: 1; text-align: center; padding: 12px 5px; color: #9ca3af; font-size: 0.9rem; white-space: nowrap; }
+        body { font-family: -apple-system, sans-serif; background-color: #f3f4f6; padding-bottom: 20px; }
+        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-item { flex: 1; text-align: center; padding: 12px 5px; color: #9ca3af; font-size: 0.9rem; }
         .nav-item.active { color: #2563eb; font-weight: bold; border-bottom: 3px solid #2563eb; }
-        /* 隱藏滾動條但保留功能 */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* 聊天室樣式 */
+        .chat-bubble { background: #eff6ff; padding: 10px 15px; border-radius: 15px; margin-bottom: 8px; font-size: 0.95rem; }
+        .chat-time { font-size: 0.7rem; color: #9ca3af; margin-top: 4px; text-align: right; }
     </style>
 </head>
 <body>
 
-    <div class="bg-blue-600 text-white pt-12 pb-6 px-6 sticky top-0 z-50 shadow-lg rounded-b-3xl">
-        <div class="flex justify-between items-center">
-            <div>
-                <p class="text-blue-200 text-xs font-bold tracking-wider uppercase">Family Trip 2026</p>
-                <h1 class="text-3xl font-bold mt-1">京都春節行</h1>
-            </div>
-            <div class="bg-white/20 p-3 rounded-full backdrop-blur-sm">
-                <i class="fas fa-plane text-xl"></i>
-            </div>
-        </div>
-        <div class="mt-4 flex gap-3 text-sm text-blue-100">
-            <span class="bg-blue-500/50 px-3 py-1 rounded-full"><i class="fas fa-user-friends mr-1"></i> 2大2小</span>
-            <span class="bg-blue-500/50 px-3 py-1 rounded-full"><i class="fas fa-snowflake mr-1"></i> 2月寒冬</span>
-        </div>
+    <div class="bg-blue-600 text-white pt-10 pb-4 px-6 sticky top-0 z-50 shadow-lg rounded-b-3xl">
+        <h1 class="text-2xl font-bold">京都春節行 <span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">Live</span></h1>
     </div>
 
-    <div class="sticky top-[130px] z-40 bg-[#f3f4f6] pt-2">
-        <div class="flex overflow-x-auto no-scrollbar bg-white mx-4 rounded-xl shadow-sm px-2">
-            <div class="nav-item active" onclick="showTab('info', this)">行前</div>
-            <div class="nav-item" onclick="showTab('day1', this)">Day 1</div>
-            <div class="nav-item" onclick="showTab('day2', this)">Day 2</div>
-            <div class="nav-item" onclick="showTab('day3', this)">Day 3</div>
-            <div class="nav-item" onclick="showTab('day4', this)">Day 4</div>
-            <div class="nav-item" onclick="showTab('day5', this)">Day 5</div>
+    <div class="sticky top-[80px] z-40 bg-[#f3f4f6] pt-2">
+        <div class="flex bg-white mx-4 rounded-xl shadow-sm px-2">
+            <div class="nav-item active" onclick="showTab('info', this)">行程</div>
+            <div class="nav-item" onclick="showTab('chat', this)">家族許願池</div>
         </div>
     </div>
 
     <div class="p-4 pb-24 max-w-md mx-auto mt-2">
-
-        <div id="info" class="tab-content fade-in">
-            <div class="card border-l-4 border-yellow-400">
-                <h3 class="font-bold text-xl mb-2 text-gray-800">💡 重點提醒</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    1. <strong>極冷預警：</strong> 京都2月可能下雪，小孩必備防風防水外套、手套。<br>
-                    2. <strong>訂房：</strong> 鎖定 MIMARU (美滿如家) 公寓酒店，需半年前預訂。<br>
-                    3. <strong>交通：</strong> 攜帶西瓜卡 (Suica/ICOCA) 綁定手機。
-                </p>
+        
+        <div id="info" class="tab-content">
+            <div class="card">
+                <h3 class="font-bold text-lg">📅 Day 1: 抵達京都</h3>
+                <p class="text-gray-600 text-sm mt-1">Haruka 直達 -> 超市買草莓 -> 飯店休息</p>
             </div>
-            
-             <div class="card">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-hotel"></i></div>
-                    <h3 class="font-bold text-lg">推薦住宿：MIMARU</h3>
-                </div>
-                <p class="text-gray-600 text-sm">公寓式酒店，有廚房與大餐桌。去超市買和牛回來煎，省錢又不用怕小孩在餐廳吵鬧。</p>
-                <a href="https://www.google.com/maps/search/MIMARU+Kyoto" target="_blank" class="btn-map">
-                    <i class="fas fa-map-marked-alt mr-2"></i> 查看分館位置
-                </a>
+            <div class="card">
+                <h3 class="font-bold text-lg">📅 Day 2: 梅小路公園</h3>
+                <p class="text-gray-600 text-sm mt-1">鐵道博物館 -> 水族館 -> 壽司郎</p>
+            </div>
+             <div class="card bg-blue-50 border-blue-200 border">
+                <p class="text-center text-blue-600 text-sm">💡 點選上方「家族許願池」看即時互動功能</p>
             </div>
         </div>
 
-        <div id="day1" class="tab-content hidden">
-            <div class="text-center text-gray-400 text-sm mb-4">抵達日 · 超市採買</div>
-            
-            <div class="card relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl-lg">15:00</div>
-                <h3 class="font-bold text-lg text-gray-800">🚄 HARUKA 直達京都</h3>
-                <p class="text-gray-500 text-sm mt-1">出關西機場後，搭乘 Hello Kitty 列車前往京都車站 (約75分鐘)。</p>
+        <div id="chat" class="tab-content hidden">
+            <div class="card bg-yellow-50 border-yellow-200 border">
+                <h3 class="font-bold text-gray-800"><i class="fas fa-magic text-yellow-500"></i> 即時同步測試</h3>
+                <p class="text-sm text-gray-600 mt-1">在這裡輸入東西，全家人的手機會同步出現喔！可以用來記帳、許願想吃的東西。</p>
             </div>
 
-            <div class="card">
-                <span class="tag">晚餐任務</span>
-                <h3 class="font-bold text-lg text-gray-800">🛒 超市大作戰</h3>
-                <p class="text-gray-500 text-sm mt-2">Check-in 後直奔 <strong>Life</strong> 或 <strong>Fresco</strong> 超市。</p>
-                <ul class="mt-3 space-y-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                    <li>🍓 <strong>必買：</strong> 日本草莓、小橘子</li>
-                    <li>🥩 <strong>必買：</strong> 半價和牛、火鍋肉片</li>
-                    <li>🥛 <strong>必買：</strong> 北海道牛乳、布丁</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="day2" class="tab-content hidden">
-            <div class="text-center text-gray-400 text-sm mb-4">梅小路公園 · 鐵道 · 水族館</div>
-            
-            <div class="card">
-                <span class="tag">上午 09:30</span>
-                <h3 class="font-bold text-lg">🚂 京都鐵道博物館</h3>
-                <p class="text-gray-500 text-sm mt-1">火車迷天堂！戶外有扇形車庫，還可以搭乘真正的蒸汽火車 (SL Steam)。</p>
-                <a href="https://goo.gl/maps/example" class="btn-map">導航去這裡</a>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="msgInput" placeholder="輸入許願清單 (例: 我想吃抹茶)" class="flex-1 p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-blue-500">
+                <button onclick="sendMsg()" class="bg-blue-600 text-white px-5 rounded-xl font-bold"><i class="fas fa-paper-plane"></i></button>
             </div>
 
-            <div class="card">
-                <span class="tag">下午 13:30</span>
-                <h3 class="font-bold text-lg">🐬 京都水族館</h3>
-                <p class="text-gray-500 text-sm mt-1">就在鐵道館隔壁。冬天室內避寒首選，看超萌的山椒魚怪獸。</p>
-            </div>
-
-            <div class="card border-l-4 border-orange-500">
-                <span class="tag">晚餐</span>
-                <h3 class="font-bold text-lg">🍣 藏壽司 / 壽司郎</h3>
-                <p class="text-gray-500 text-sm mt-1">用 App 先訂位。讓小孩體驗日本當地的扭蛋文化。</p>
-            </div>
-        </div>
-
-        <div id="day3" class="tab-content hidden">
-            <div class="text-center text-gray-400 text-sm mb-4">奈良 · 餵鹿 · 東大寺</div>
-
-            <div class="card">
-                <span class="tag">交通</span>
-                <h3 class="font-bold text-lg">近鐵電車 (京都 -> 奈良)</h3>
-                <p class="text-gray-500 text-sm mt-1">約 45 分鐘車程。建議早點出發。</p>
-            </div>
-
-            <div class="card">
-                <span class="tag">重點行程</span>
-                <h3 class="font-bold text-lg">🦌 奈良公園餵鹿</h3>
-                <p class="text-gray-500 text-sm mt-1">買鹿仙貝請注意：冬天的鹿很餓，建議將仙貝藏好，一片一片拿出來。</p>
-            </div>
-
-            <div class="card">
-                <span class="tag">必吃點心</span>
-                <h3 class="font-bold text-lg">🍡 中谷堂 搗麻糬</h3>
-                <p class="text-gray-500 text-sm mt-1">現場觀看極速搗麻糬表演，熱熱吃超軟Q。</p>
-                <a href="https://goo.gl/maps/example" class="btn-map">導航去這裡</a>
-            </div>
-        </div>
-
-        <div id="day4" class="tab-content hidden">
-            <div class="text-center text-gray-400 text-sm mb-4">清水寺 · 錦市場 · 燒肉</div>
-            
-            <div class="card">
-                <span class="tag">上午 08:30</span>
-                <h3 class="font-bold text-lg">⛩️ 清水寺 & 二年坂</h3>
-                <p class="text-gray-500 text-sm mt-1">早起避開人潮。沿途有「橡子共和國」吉卜力專賣店，適合拍照。</p>
-            </div>
-
-            <div class="card">
-                <span class="tag">午餐/下午</span>
-                <h3 class="font-bold text-lg">🍤 錦市場 (京都廚房)</h3>
-                <p class="text-gray-500 text-sm mt-1">吃章魚蛋串、豆乳甜甜圈。人潮擁擠請牽好小孩。</p>
-            </div>
-
-            <div class="card border-l-4 border-red-500">
-                <span class="tag">豪華晚餐</span>
-                <h3 class="font-bold text-lg">🥩 燒肉 弘 (Yakiniku Hiro)</h3>
-                <p class="text-gray-500 text-sm mt-1">京都CP值最高的燒肉名店。務必提前一個月上網預約「八條口店」或「京都站前店」。</p>
-            </div>
-        </div>
-
-        <div id="day5" class="tab-content hidden">
-            <div class="text-center text-gray-400 text-sm mb-4">臨空城 Outlet · 機場</div>
-            
-            <div class="card">
-                <span class="tag">最後衝刺</span>
-                <h3 class="font-bold text-lg">🎡 臨空城 Outlet</h3>
-                <p class="text-gray-500 text-sm mt-1">離機場僅一站距離。有摩天輪可以安撫小孩，爸媽輪流去買衣服鞋子。</p>
-            </div>
-            
-            <div class="p-6 text-center mt-8">
-                <div class="inline-block p-4 rounded-full bg-blue-100 text-blue-600 mb-3">
-                    <i class="fas fa-home text-2xl"></i>
-                </div>
-                <h3 class="font-bold text-gray-800">平安回家</h3>
-                <p class="text-sm text-gray-500 mt-1">檢查護照、手機、錢包</p>
+            <div id="msgList" class="space-y-3 pb-20">
+                <div class="text-center text-gray-400 text-sm py-4">正在連線到 Firebase...</div>
             </div>
         </div>
 
     </div>
 
     <script>
+        // ----------------------------------------------------
+        // Firebase
+        // ----------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyAt9eJJfo9VG_tPqAYQbi_TQZhn-1c9w4Y",
+            authDomain: "kyoto-family-chat.firebaseapp.com",
+            projectId: "kyoto-family-chat",
+            storageBucket: "kyoto-family-chat.firebasestorage.app",
+            messagingSenderId: "512430489468",
+            appId: "1:512430489468:web:428b652a53d73bcc856ef9",
+        };
+        // ----------------------------------------------------
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 監聽資料庫變化 (Real-time Listener)
+        db.collection("wishes").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            const list = document.getElementById("msgList");
+            list.innerHTML = ""; // 清空舊的
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const time = new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                list.innerHTML += `
+                    <div class="card p-3 mb-2 flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-gray-800">${data.text}</div>
+                            <div class="text-xs text-gray-400">${time}</div>
+                        </div>
+                        <button onclick="deleteMsg('${doc.id}')" class="text-red-300 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            if(snapshot.empty) {
+                list.innerHTML = '<div class="text-center text-gray-400 text-sm py-4">目前沒有許願，趕快新增一個！</div>';
+            }
+        });
+
+        // 發送訊息
+        function sendMsg() {
+            const input = document.getElementById("msgInput");
+            if (input.value.trim() === "") return;
+            
+            db.collection("wishes").add({
+                text: input.value,
+                timestamp: Date.now()
+            });
+            input.value = ""; // 清空輸入框
+        }
+
+        // 刪除訊息
+        function deleteMsg(id) {
+            if(confirm('確定要刪除這個願望嗎？')) {
+                db.collection("wishes").doc(id).delete();
+            }
+        }
+
+        // 切換分頁
         function showTab(tabId, element) {
-            // 隱藏所有內容
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // 移除所有按鈕的 active 樣式
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            // 顯示選中的內容
             document.getElementById(tabId).classList.remove('hidden');
-            // 幫選中的按鈕加上 active 樣式
             element.classList.add('active');
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
